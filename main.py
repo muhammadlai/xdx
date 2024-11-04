@@ -1,20 +1,7 @@
-from flask import Flask, request, render_template
+from flask import Flask, render_template, request
 import requests
-import re
-import time
-import os
 
 app = Flask(__name__)
-app.debug = True
-
-def get_profile_name(access_token):
-    url = "https://graph.facebook.com/me"
-    params = {'access_token': access_token}
-    response = requests.get(url, params=params)
-    data = response.json()
-    if 'name' in data:
-        return data['name']
-    return None
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -23,13 +10,19 @@ def index():
 
     if request.method == 'POST':
         access_token = request.form['access_token']
-        profile_name = get_profile_name(access_token)
-        if profile_name is None:
-            error_message = "Invalid access token. Please try again."
+        profile_name, error_message = check_token(access_token)
 
     return render_template('index.html', profile_name=profile_name, error_message=error_message)
 
 
-if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=True)
+def check_token(token):
+    # Placeholder: yaahan aapko API endpoint use karne hain
+    # Is example mein hum log yeh maan rahe hain ki agar token 'valid' hai toh
+    if token == "valid_token":  # Replace this with actual validation logic
+        return "Your Profile Name", None
+    else:
+        return None, "Invalid or expired token"
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
