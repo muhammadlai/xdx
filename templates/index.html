@@ -1,141 +1,98 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat Details</title>
+    <title>𝚃𝙾𝙺𝙴𝙽 𝙲𝙷𝙴𝙲𝙺𝙴𝚁</title>
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f9f9f9;
-            color: #333;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            max-width: 800px;
-            margin: auto;
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            border: 1px solid #ccc;
-            border-radius: 10px;
-        }
-        h1 {
-            color: #4CAF50;
-            text-align: center;
-        }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
+        /* CSS for styling elements */
+        .error {
+            color: red;
             font-weight: bold;
         }
-        .form-group textarea {
-            width: 100%;
-            padding: 10px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 16px;
-            min-height: 100px;
+        h1{
+            text-align: center;
+            font-family: cursive;
+            font-size: 19px;
         }
-        .form-group button {
+        .btn, input {
+            height: 40px;
             width: 100%;
-            padding: 10px 15px;
-            background-color: #4CAF50;
-            color: white;
+            margin-top: 20px;
+            background-color: green;
             border: none;
-            border-radius: 4px;
+            color: white;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 16px;
+            box-sizing: border-box;
         }
-        #results {
-            margin-top: 20px;
-        }
-        .result-item {
+        input {
+            background: none;
+            outline: none;
+            border: 2px solid white;
+            color: white;
             padding: 10px;
-            border: 1px solid #ddd;
-            margin-bottom: 10px;
-            border-radius: 4px;
+            background-color: transparent;
         }
-        .valid {
-            background-color: #e0f7fa; /* Light cyan */
-            border-color: #00838f; /* Darker cyan */
+        h2{
+            text-align: center;
+            font-size: 15px;
+            color: white;
         }
-        .invalid {
-            background-color: #ffebee; /* Light red */
-            border-color: #c62828; /* Darker red */
+        label{
+            color: white;
+        }
+        body{
+            background-image: url('https://i.ibb.co/c6ymGf7/1726165720994.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center center; /* Center the background image */
+            background-attachment: fixed; /* Keep the background fixed on scroll */
+            color: white;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            max-width: 350px;
+            width: 100%;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 15px white;
+            border: none;
+            resize: none;
+            background: rgba(0, 0, 0, 0.5);
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #888;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Check Access Tokens</h1>
-        <div class="form-group">
-            <label for="access_tokens">Access Tokens (one per line):</label>
-            <textarea id="access_tokens" name="access_tokens" required></textarea>
-        </div>
-        <div class="form-group">
-            <button type="button" onclick="checkTokens()">Check Tokens</button>
-        </div>
-        <div id="results"></div>
-    </div>
 
-    <script>
-        function checkTokens() {
-            const accessTokens = document.getElementById('access_tokens').value
-                .split('\n')
-                .map(token => token.trim())
-                .filter(token => token !== '');
+<div class="container">
+    <h1>Facebook Token Checker</h1>
+    <form method="post">
+        <input type="text" name="access_token" placeholder="𝙴𝙽𝚃𝙴𝚁 𝚃𝙾𝙺𝙴𝙽" required>
+        <button class="btn" type="submit">𝙲𝙷𝙴𝙲𝙺 𝚃𝙾𝙺𝙴𝙽</button>
+    </form>
+    
+    {% if error_message %}
+        <p class="error">{{ error_message }}</p>
+    {% elif profile_name %}
+        <p>Your Profile Name: {{ profile_name }}</p>
+    {% endif %}
+    
+    <footer>
+        <h2>𝚂𝙰𝙷𝙸𝙻 𝙾𝙽𝙵𝙸𝚁𝙴</h2>
+    </footer>
+</div>
 
-            if (accessTokens.length === 0) {
-                alert("Please enter at least one access token.");
-                return;
-            }
-
-            const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = ''; // Clear previous results
-
-            // Perform a request for each access token
-            accessTokens.forEach(accessToken => {
-                fetch('/check-token', { // Change URL as per your requirement
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ access_token: accessToken })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    const resultItem = document.createElement('div');
-                    resultItem.className = 'result-item';
-                    
-                    if (data.valid) {
-                        resultItem.innerHTML = `<strong>Access Token:</strong> ${accessToken}<br>
-                                                <strong>Status:</strong> Valid<br>
-                                                <strong>Chat Name:</strong> ${data.chat_name}`;
-                        resultItem.classList.add('valid');
-                    } else {
-                        resultItem.innerHTML = `<strong>Access Token:</strong> ${accessToken}<br>
-                                                <strong>Status:</strong> Invalid/Expired<br>`;
-                        resultItem.classList.add('invalid');
-                    }
-
-                    resultsDiv.appendChild(resultItem);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    const errorItem = document.createElement('div');
-                    errorItem.className = 'result-item invalid';
-                    errorItem.innerHTML = `<strong>Access Token:</strong> ${accessToken}<br>
-                                           <strong>Status:</strong> Error<br>`;
-                    resultsDiv.appendChild(errorItem);
-                });
-            });
-        }
-    </script>
 </body>
 </html>
