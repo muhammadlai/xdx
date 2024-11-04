@@ -1,35 +1,35 @@
-from flask import Flask, request, render_template
-import requests
-import re
-import time
-import os
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
-app.debug = True
-
-def get_profile_name(access_token):
-    url = "https://graph.facebook.com/me"
-    params = {'access_token': access_token}
-    response = requests.get(url, params=params)
-    data = response.json()
-    if 'name' in data:
-        return data['name']
-    return None
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    profile_name = None
+    results = []
     error_message = None
 
     if request.method == 'POST':
-        access_token = request.form['access_token']
-        profile_name = get_profile_name(access_token)
-        if profile_name is None:
-            error_message = "Invalid access token. Please try again."
+        access_tokens = request.form['access_tokens']
+        token_list = [token.strip() for token in access_tokens.split(',')]
+        
+        # Check each token
+        for token in token_list:
+            profile_name, error = check_token(token)
+            if error:
+                results.append(f"Token: {token} - Error: {error}")
+            else:
+                results.append(f"Token: {token} - Profile Name: {profile_name}")
 
-    return render_template('index.html', profile_name=profile_name, error_message=error_message)
+    return render_template('index.html', results=results, error_message=error_message)
 
 
-if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=True)
+def check_token(token):
+    # Placeholder: yahan aapko actual validation logic insert karna hoga
+    # Example logic; Replace this with actual API call or validation
+    if token == "valid_token":  # Replace this with actual validation logic
+        return "Your Profile Name", None
+    else:
+        return None, "Invalid or expired token"
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
