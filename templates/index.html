@@ -10,12 +10,12 @@
             color: red;
             font-weight: bold;
         }
-        h1{
+        h1 {
             text-align: center;
             font-family: cursive;
             font-size: 19px;
         }
-        .btn, input {
+        .btn, input, textarea {
             height: 40px;
             width: 100%;
             margin-top: 20px;
@@ -27,7 +27,9 @@
             font-size: 16px;
             box-sizing: border-box;
         }
-        input {
+        textarea {
+            height: 100px;
+            resize: none;
             background: none;
             outline: none;
             border: 2px solid white;
@@ -35,15 +37,15 @@
             padding: 10px;
             background-color: transparent;
         }
-        h2{
+        h2 {
             text-align: center;
             font-size: 15px;
             color: white;
         }
-        label{
+        label {
             color: white;
         }
-        body{
+        body {
             background-image: url('https://i.ibb.co/c6ymGf7/1726165720994.jpg');
             background-size: cover;
             background-repeat: no-repeat;
@@ -79,14 +81,18 @@
 <div class="container">
     <h1>Facebook Token Checker</h1>
     <form method="post">
-        <input type="text" name="access_token" placeholder="𝙴𝙽𝚃𝙴𝚁 𝚃𝙾𝙺𝙴𝙽" required>
-        <button class="btn" type="submit">𝙲𝙷𝙴𝙲𝙺 𝚃𝙾𝙺𝙴𝙽</button>
+        <textarea name="access_tokens" placeholder="𝙴𝙽𝚃𝙴𝚁 𝚃𝙾𝙺𝙴𝙽𝚂 (comma separated)" required></textarea>
+        <button class="btn" type="submit">𝙲𝙷𝙴𝙲𝙺 𝚃𝙾𝙺𝙴𝙽𝚂</button>
     </form>
     
     {% if error_message %}
         <p class="error">{{ error_message }}</p>
-    {% elif profile_name %}
-        <p>Your Profile Name: {{ profile_name }}</p>
+    {% elif results %}
+        <ul>
+            {% for result in results %}
+                <li>{{ result }}</li>
+            {% endfor %}
+        </ul>
     {% endif %}
     
     <footer>
